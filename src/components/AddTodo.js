@@ -1,7 +1,9 @@
-import {useState} from 'react';
+import {useContext, useState} from 'react';
+import { todoDispatchContext } from '../context/todoContext';
 
-export default function AddTodo({addTodo}) {
+export default function AddTodo() {
   const [value, setValue] = useState('')
+  const dispatch = useContext(todoDispatchContext)
 
   function handleChange(e) {
     const todoValue = e.target.value
@@ -10,7 +12,10 @@ export default function AddTodo({addTodo}) {
 
   function handleClick() {
     if (value.trim().length) {
-      addTodo(value.trim())
+      dispatch({
+        type: "ADD_TODO",
+        content: value.trim(),
+      })
       setValue('')
     } else {
       setValue('')

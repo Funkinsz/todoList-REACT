@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { todoDispatchContext } from "../context/todoContext";
 
-export default function EditTodo({todo, handleEdit}) {
+export default function EditTodo({todo}) {
   const [value, setValue] = useState(todo.content)
+  const dispatch = useContext(todoDispatchContext)
 
   function handleChange(e) {
     const todoValue = e.target.value
@@ -10,18 +12,19 @@ export default function EditTodo({todo, handleEdit}) {
 
   function handleClick() {
     if (value.trim().length) {
-      todo.content = value.trim()
-      setValue('')
-      handleEdit()
-    } else {
-      setValue('')
-      handleEdit()
+      dispatch({
+        type: "CHANGE_TODO",
+        id: todo.id,
+        value: value.trim()
+      })
     }
-  console.log(value);
   }
 
   function handleCancel() {
-    handleEdit()
+    dispatch({
+      type: "EDIT_TODO",
+      id: todo.id
+    })
   }
   
   return (

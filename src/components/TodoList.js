@@ -1,19 +1,20 @@
+import { todoStateContext } from '../context/todoContext';
+import { useContext } from 'react'
+import EditTodo from './EditTodo';
 import TodoItem from './TodoItem'
 
-export default function TodoList({todoList, deleteTodo, toggleTodo, editTodo, changeTodo}) {
-  return todoList.length ? (
+export default function TodoList() {
+  const state = useContext(todoStateContext)
+  return state.todoList.length ? (
     <div>
       <ul>
-        {todoList.map((todo, i) => (
-          <TodoItem 
-            key={i} 
-            todo={todo} 
-            deleteTodo={deleteTodo}
-            toggleTodo={toggleTodo}
-            editTodo={editTodo}
-            changeTodo={changeTodo}
-          />
-        ))}
+        {state.todoList.map((todo) => 
+        todo.edit ? (
+          <EditTodo key={todo.id} todo={todo} />
+        ) : (
+          <TodoItem key={todo.id} todo={todo} />
+        )
+        )}
       </ul>
     </div>
   ) : (

@@ -1,38 +1,39 @@
-import { useState } from "react";
-import EditTodo from "./EditTodo";
+import { useContext } from "react";
+import { todoDispatchContext } from "../context/todoContext";
 
-export default function TodoItem({todo, deleteTodo, toggleTodo, editTodo, changeTodo}) {
-  const [liked, setLiked] = useState(false);
-  const [edit, setEdit] = useState(false);
-
-  console.log(edit);
+export default function TodoItem({todo}) {
+  const dispatch = useContext(todoDispatchContext)
 
   const handleClick = () => {
-    setLiked(!liked)
+    dispatch({
+      type: "TOGGLE_TODO",
+      id: todo.id
+    })
   }
 
   const handleEdit = () => {
-    setEdit(!edit)
+    dispatch({
+      type: "EDIT_TODO",
+      id: todo.id
+    })
   }
 
-  if (edit) {
-    console.log(todo);
-    return (  
-      <li className="d-flex align-items-center mb10">
-        <EditTodo todo={todo} handleEdit={handleEdit}/>
-      </li>
-    );
-  } else {
-    return (
-      <li className="d-flex align-items-center mb10">
-        <span className="flex-fill mr10">
-          {todo.content}
-          { liked ? "✔️" : "" }
-        </span>
-        <button onClick={handleClick} className="btn btn-primary mr10">{liked ? "Réalisé" : "A faire"}</button>
-        <button onClick={handleEdit} className="btn btn-primary mr10">Modifier</button>
-        <button onClick={() => deleteTodo(todo.id)} className="btn btn-primary-reverse mr10">Supprimer</button>
-      </li>
-    );
+  const handleDelete = () => {
+    dispatch({
+      type: "DELETE_TODO",
+      id: todo.id
+    })
   }
+
+
+  return (
+    <li className="d-flex align-items-center mb10">
+      <span className="flex-fill mr10">
+        {todo.content} {todo.done && "✔️"}
+      </span>
+      <button onClick={handleClick} className="btn btn-primary mr10">{todo.done ? "Réalisé" : "A faire"}</button>
+      <button onClick={handleEdit} className="btn btn-primary mr10">Modifier</button>
+      <button onClick={handleDelete} className="btn btn-primary-reverse mr10">Supprimer</button>
+    </li>
+  );
 }
